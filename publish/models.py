@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from django.utils import timezone
 from django.contrib.auth import get_user_model
 
@@ -10,7 +11,11 @@ class Post(models.Model):
     created = models.DateTimeField('Created Date', default=timezone.now)
     title = models.CharField('Title', max_length=200)
     content = models.TextField('Content')
-    slug = models.SlugField('Slug')
+    slug = models.SlugField('Slug', unique=True)
+    view_count = models.IntegerField("View Count", default=0)
 
+    def get_absolute_url(self):
+        return reverse("view_post", args=[self.slug])
+    
     def __str__(self):
-        return f'"{self.title}" by {self.author}'
+        return '"%s" by %s' % (self.title, self.author)

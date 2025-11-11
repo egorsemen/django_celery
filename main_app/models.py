@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
-
+import uuid
 
 class UserAccountManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -34,6 +34,10 @@ class User(AbstractBaseUser):
     last_name = models.CharField(verbose_name='last name', max_length=30)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
+
+    is_verified = models.BooleanField('verified', default=False) # new
+    verification_uuid = models.UUIDField('Unique Verification UUID', default=uuid.uuid4)
+
     objects = UserAccountManager()
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name']
